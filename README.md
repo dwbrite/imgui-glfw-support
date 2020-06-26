@@ -12,6 +12,7 @@ GLFW support for [imgui-rs](https://github.com/Gekkio/imgui-rs).
 
 ```rust
 use std::time::Instant;
+
 use futures::executor::block_on;
 
 fn main() {
@@ -28,25 +29,21 @@ fn main() {
 
     let surface = wgpu::Surface::create(&window);
 
-    let adapter = block_on(
-        wgpu::Adapter::request(
-            &wgpu::RequestAdapterOptions {
-                power_preference: wgpu::PowerPreference::HighPerformance,
-                compatible_surface: Some(&surface)
-            },
-            wgpu::BackendBit::PRIMARY,
-        )
-    ).unwrap();
+    let adapter = block_on(wgpu::Adapter::request(
+        &wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: Some(&surface),
+        },
+        wgpu::BackendBit::PRIMARY,
+    ))
+    .unwrap();
 
-
-    let (device, mut queue) = block_on(
-        adapter.request_device(&wgpu::DeviceDescriptor {
-            extensions: wgpu::Extensions {
-                anisotropic_filtering: false,
-            },
-            limits: wgpu::Limits::default(),
-        })
-    );
+    let (device, mut queue) = block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+        extensions: wgpu::Extensions {
+            anisotropic_filtering: false,
+        },
+        limits: wgpu::Limits::default(),
+    }));
 
     let mut swap_chain_desc = wgpu::SwapChainDescriptor {
         usage: wgpu::TextureUsage::OUTPUT_ATTACHMENT,
@@ -129,7 +126,8 @@ fn main() {
             glfw_platform.prepare_render(&ui, &mut window);
         }
 
-        let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
+        let mut encoder =
+            device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: None });
         imgui_renderer
             .render(ui.render(), &device, &mut encoder, &frame.view)
             .expect("render failed");

@@ -1,5 +1,5 @@
-use std::time::Instant;
 use futures::executor::block_on;
+use std::time::Instant;
 
 fn main() {
     let mut glfw = glfw::init(glfw::FAIL_ON_ERRORS).expect("GLFW failed to init");
@@ -18,19 +18,18 @@ fn main() {
     let adapter = block_on(wgpu::Adapter::request(
         &wgpu::RequestAdapterOptions {
             power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None
+            compatible_surface: None,
         },
         wgpu::BackendBit::PRIMARY,
-    )).unwrap();
+    ))
+    .unwrap();
 
-    let (device, mut queue) = block_on(adapter.request_device(
-        &wgpu::DeviceDescriptor {
-            extensions: wgpu::Extensions {
-                anisotropic_filtering: false,
-            },
-            limits: wgpu::Limits::default(),
-        }
-    ));
+    let (device, mut queue) = block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+        extensions: wgpu::Extensions {
+            anisotropic_filtering: false,
+        },
+        limits: wgpu::Limits::default(),
+    }));
 
     let mut swap_chain_desc = wgpu::SwapChainDescriptor {
         usage: wgpu::TextureUsage::OUTPUT_ATTACHMENT,
