@@ -22,3 +22,4 @@ image = ["glfw/image"]
 wgpu = "0.5"
 imgui-wgpu = "0.7"
 imgui = "0.4"
+futures = "0.3.4"
